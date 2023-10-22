@@ -1,7 +1,7 @@
 // Get Counter to Work, Add Favicon, refactor, Add scroll capability for speed, hide menu unless movement
 
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
 import { BsPlayFill, BsPauseFill } from "react-icons/bs";
@@ -42,12 +42,31 @@ function SpeedControl({ speed, setSpeed }) {
   )
 }
 
-function CounterControl() {
+function Count({ speed, play }) {
+
+  // If Zero for less than interval, no interval set to zero. Need to make zero automatic
+
+  const [time, setTime] = useState(0);
+
+  useEffect(() => {
+    console.log(time + 1 * play)
+
+    const interval = setInterval(() => setTime((time + 1) * play), speed * 1000);
+    
+
+    return () => clearInterval(interval);
+  }, [time, play, speed]);
+
+  if (play) { return(<h1>{time}</h1>) }
+  else { return(<h1>0</h1>) }
+}
+
+function CounterControl({ speed, play}) {
   return(
     <div className='w-48 h-16 bg-neutral-800 hover:bg-neutral-700 transition-colors rounded-full shadow-2xl mr-4 flex justify-center flex-row'>
       <div className='flex flex-row items-center'>
         <h1>Counter &nbsp;</h1>
-        <h1>6</h1>
+        <Count speed={speed} play={play} />
       </div>
     </div>
   )
@@ -59,7 +78,7 @@ function ToolBar({speed, setSpeed, play, setPlay }) {
       <div className='h-full flex text-white text-xl font-roboto'>
         <SpeedControl speed={ speed } setSpeed={ setSpeed }/>
         <MediaControl play = { play } setPlay={ setPlay }/>
-        <CounterControl />
+        <CounterControl speed={ speed } play={ play } />
       </div>
     </div>
   )
