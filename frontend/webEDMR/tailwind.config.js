@@ -10,6 +10,9 @@ export default {
       'roboto': ['Roboto']
     },
     extend: {
+      boxShadow: {
+        '3xl': '5px 10px 15px -5px rgba(0, 0, 0, 0.5)',
+      },
       animation: {
         'travel-linear': 'travel 3s linear infinite',
         'travel-ease': 'travel 3s ease-in-out infinite'
@@ -21,10 +24,10 @@ export default {
         //   '100%': { left: '0%'}
         // }
         travel: {
-          '0%': { left: 'calc(50% - 48px)'},
+          '0%': { left: 'calc(50% - 24px)'},
           '25%': { left: '0%'},
           '75%': { left: 'calc(100% - 48px)'},
-          '100%': { left: 'calc(50% - 48px)'}
+          '100%': { left: 'calc(50% - 24px)'}
         }
       }
     },

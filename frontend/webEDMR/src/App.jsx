@@ -1,19 +1,16 @@
-// Get Counter to Work, Add Favicon, refactor, Add scroll capability for speed, hide menu unless movement
-
+// Add refactor
+// Fix setInterval Lag
 
 import React, { useState, useEffect } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
 import { BsPlayFill, BsPauseFill } from "react-icons/bs";
 import './index.css'
-
 
 function MediaControl({play, setPlay}) {
 
   const [buttonStyle, setButtonStyle] = useState(1)
 
   return (
-    <div className='w-16 h-16 bg-neutral-800 hover:bg-neutral-700 transition-colors rounded-full shadow-2xl mr-4'>
+    <div className='w-16 h-16 bg-neutral-800 hover:bg-neutral-700 transition-colors rounded-full shadow-3xl mr-4'>
       <div className="w-full h-full relative"
         onClick={() => {
           setButtonStyle(buttonStyle + 1);
@@ -33,7 +30,7 @@ function MediaControl({play, setPlay}) {
 function SpeedControl({ speed, setSpeed }) {
 
   return(
-    <div onClick={() => setSpeed((speed % 4) + 1)} className='w-48 h-16 bg-neutral-800 hover:bg-neutral-700 transition-colors rounded-full shadow-2xl mr-4 flex justify-center flex-row'>
+    <div onClick={() => setSpeed((speed % 4) + 1)} className='w-48 h-16 bg-neutral-800 hover:bg-neutral-700 transition-colors rounded-full shadow-3xl mr-4 flex justify-center flex-row'>
       <div className='flex flex-row items-center'>
         <h1>Speed &nbsp;</h1>
         <h1>{ speed }s</h1>
@@ -44,26 +41,29 @@ function SpeedControl({ speed, setSpeed }) {
 
 function Count({ speed, play }) {
 
-  // If Zero for less than interval, no interval set to zero. Need to make zero automatic
+  // Bug: If speed changed without pausing, problems
 
   const [time, setTime] = useState(0);
 
   useEffect(() => {
-    console.log(time + 1 * play)
+    let interval;
 
-    const interval = setInterval(() => setTime((time + 1) * play), speed * 1000);
-    
-
+    if (play) {
+      interval = setInterval(() => setTime((time + 1) * play), speed * 1000);
+    } else {
+      setTime(0);
+      interval = 0;
+    }
     return () => clearInterval(interval);
   }, [time, play, speed]);
 
-  if (play) { return(<h1>{time}</h1>) }
+  if (play) { return(<h1>{ time }</h1>) }
   else { return(<h1>0</h1>) }
 }
 
-function CounterControl({ speed, play}) {
+function CounterControl({ speed, play }) {
   return(
-    <div className='w-48 h-16 bg-neutral-800 hover:bg-neutral-700 transition-colors rounded-full shadow-2xl mr-4 flex justify-center flex-row'>
+    <div className='w-48 h-16 bg-neutral-800 transition-colors rounded-full shadow-3xl flex justify-center flex-row'>
       <div className='flex flex-row items-center'>
         <h1>Counter &nbsp;</h1>
         <Count speed={speed} play={play} />
@@ -89,7 +89,7 @@ function Canvas({ speed, play }) {
   const animate = play ? speed : 0;
 
   const animationVariants = {
-    0: 'left-[calc(50%-48px)] bg-[#5ac0b0] w-12 h-12 fixed rounded-full transition-all',
+    0: 'left-[calc(50%-24px)] bg-[#5ac0b0] w-12 h-12 fixed rounded-full transition-all',
     1: 'animate-[travel_1s_linear_infinite] bg-[#5ac0b0] w-12 h-12 fixed rounded-full transition-all',
     2: 'animate-[travel_2s_linear_infinite] bg-[#5ac0b0] w-12 h-12 fixed rounded-full transition-all',
     3: 'animate-[travel_3s_linear_infinite] bg-[#5ac0b0] w-12 h-12 fixed rounded-full transition-all',
@@ -112,6 +112,7 @@ function App() {
 
   return (
     <div className='w-screen h-screen flex flex-col-reverse select-none'>
+      {/* <div className='absolute w-1/2 h-screen bg-black opacity-50'></div> */}
       <ToolBar setSpeed = { setSpeed } speed={ speed } play={play} setPlay = { setPlay }/>
       <Canvas speed = { speed } play = { play } />
       <h1 className='absolute bottom-0 text-[#5ac0b0] font-coolvetica text-3xl p-5'>webEDMR</h1>
