@@ -21,6 +21,7 @@ Fun Things:
 - Tailwind is amazing, Node is pretty alright, React I have to get used to
 - Terinary Ops in css to change based on state (Really proud of), use Rem/Mod ops to calc
 - SetInterval Counter lagging: Fixed by polling every 1/10 second, get floor of difference between start time and now. Only updats every second, but polls 1/10th to no get behind
+- Embed Audio follows useState useEffect
 
 Next Steps Personally:
 - On a larger project, state management will be more important, may require statement manager like redux.

@@ -1,5 +1,4 @@
 // Add refactor
-// Fix setInterval Lag
 
 import React, { useState, useEffect, useRef } from 'react'
 import { BsPlayFill, BsPauseFill } from "react-icons/bs";
@@ -55,43 +54,95 @@ function SpeedControl({ speed, setSpeed }) {
 //   //   return () => clearInterval(interval);
 //   // }, [time, play, speed]);
 
-
-
-
 //   if (play) { return(<h1>{ time }</h1>) }
+//   else { return(<h1>0</h1>) }
+// }
+
+// function NowCount({ speed, play }) {
+
+//   // Need to add 1-4 sizes, still out of sync
+
+//   function now() {return ((new Date()).getTime())}
+
+//   const [time, setTime] = useState(0);
+//   const [startTime, setStartTime] = useState(0);
+
+//   useEffect(() => {
+//     if (play) {
+//       setStartTime(now())
+//     } else {
+//       setStartTime(0)
+//     }
+//   }, [play])
+
+//   useEffect(() => {
+
+//     function tick(startTime) { return (Math.floor((now() - startTime) / 1000)) }
+
+//     let interval;
+
+//     if (play) {
+//       interval = setInterval(() => {
+//         setTime(tick(startTime))
+//       }, 100);
+//     } else {
+//       setTime(0);
+//       interval = 0;
+//     }
+//     return () => clearInterval(interval);
+//   }, [time, play, speed]);
+
+//   if (play && time < 1000000000) { return(<h1>{ time }</h1>) }
 //   else { return(<h1>0</h1>) }
 // }
 
 function Count({ speed, play }) {
 
-  // Need to add 1-4 sizes
+  const audioLeft = new Audio('./left.mp3')
+  const audioRight = new Audio('./right.mp3')
 
-  function now() {return ((new Date()).getTime())}
+  function now() {
+    return ((new Date()).getTime())
+  }
+
+  function playSound(startTime, speed) {
+
+    const elapse = (now() - startTime) % (speed * 1000)
+    const leftFloor = (speed * 250) - 50 
+    const leftCeil = (speed * 250) + 50
+    const rightFloor = (speed * 750) - 50 
+    const rightCeil = (speed * 750) + 50
+    const locationLeft = (leftFloor < elapse && elapse < leftCeil)
+    const locationRight = (rightFloor < elapse && elapse < rightCeil)
+
+    if (locationLeft) {
+      console.log("Left", elapse)
+      audioLeft.play()
+    }
+    if (locationRight) {
+      console.log("Right", elapse)
+      audioRight.play()
+    }
+  }
+
+  function tick(startTime) {
+    return (Math.floor((now() - startTime) / (speed * 1000)))
+  }
 
   const [time, setTime] = useState(0);
   const [startTime, setStartTime] = useState(0);
 
   useEffect(() => {
-    if (play) {
-      console.log('NEW START TIME')
-      setStartTime(now())
-    } else {
-      setStartTime(0)
-    }
+    if (play) { setStartTime(now()) }
+    else { setStartTime(0) }
   }, [play])
 
   useEffect(() => {
-
-    function tick(startTime) {
-      let val = (Math.floor((now() - startTime) / 1000));
-      console.log(val, now(), startTime)
-      return val
-    }
-
     let interval;
 
     if (play) {
       interval = setInterval(() => {
+        playSound(startTime, speed)
         setTime(tick(startTime))
       }, 100);
     } else {
@@ -101,7 +152,7 @@ function Count({ speed, play }) {
     return () => clearInterval(interval);
   }, [time, play, speed]);
 
-  if (play && time < 1000000000) { return(<h1>{ time }</h1>) }
+  if (play && time < 100000000) { return(<h1>{ time }</h1>) }
   else { return(<h1>0</h1>) }
 }
 
@@ -158,8 +209,8 @@ function App() {
     <div className='w-screen h-screen flex flex-col-reverse select-none'>
       
       <ToolBar setSpeed = { setSpeed } speed={ speed } play={play} setPlay = { setPlay }/>
-      <div className='absolute w-1/2 h-screen bg-black opacity-50'></div>
-      <Canvas speed = { speed } play = { play } className/>
+      {/* <div className='absolute w-1/2 h-screen bg-black opacity-50'></div> */}
+      <Canvas speed = { speed } play = { play } />
       <h1 className='absolute bottom-0 text-[#5ac0b0] font-coolvetica text-3xl p-5'>webEMDR</h1>
     </div>    
   )
