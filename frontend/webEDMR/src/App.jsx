@@ -1,7 +1,7 @@
 // Add refactor
 // Fix setInterval Lag
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { BsPlayFill, BsPauseFill } from "react-icons/bs";
 import './index.css'
 
@@ -39,17 +39,61 @@ function SpeedControl({ speed, setSpeed }) {
   )
 }
 
+// Old Count got out of sync and lagged
+// function OldCount({ speed, play }) {
+//   // const [time, setTime] = useState(0);
+
+//   // useEffect(() => {
+//   //   let interval;
+
+//   //   if (play) {
+//   //     interval = setInterval(() => setTime((time + 1) * play), speed * 1000);
+//   //   } else {
+//   //     setTime(0);
+//   //     interval = 0;
+//   //   }
+//   //   return () => clearInterval(interval);
+//   // }, [time, play, speed]);
+
+
+
+
+//   if (play) { return(<h1>{ time }</h1>) }
+//   else { return(<h1>0</h1>) }
+// }
+
 function Count({ speed, play }) {
 
-  // Bug: If speed changed without pausing, problems
+  // Need to add 1-4 sizes
+
+  function now() {return ((new Date()).getTime())}
 
   const [time, setTime] = useState(0);
+  const [startTime, setStartTime] = useState(0);
 
   useEffect(() => {
+    if (play) {
+      console.log('NEW START TIME')
+      setStartTime(now())
+    } else {
+      setStartTime(0)
+    }
+  }, [play])
+
+  useEffect(() => {
+
+    function tick(startTime) {
+      let val = (Math.floor((now() - startTime) / 1000));
+      console.log(val, now(), startTime)
+      return val
+    }
+
     let interval;
 
     if (play) {
-      interval = setInterval(() => setTime((time + 1) * play), speed * 1000);
+      interval = setInterval(() => {
+        setTime(tick(startTime))
+      }, 100);
     } else {
       setTime(0);
       interval = 0;
@@ -57,7 +101,7 @@ function Count({ speed, play }) {
     return () => clearInterval(interval);
   }, [time, play, speed]);
 
-  if (play) { return(<h1>{ time }</h1>) }
+  if (play && time < 1000000000) { return(<h1>{ time }</h1>) }
   else { return(<h1>0</h1>) }
 }
 
@@ -112,10 +156,11 @@ function App() {
 
   return (
     <div className='w-screen h-screen flex flex-col-reverse select-none'>
-      {/* <div className='absolute w-1/2 h-screen bg-black opacity-50'></div> */}
+      
       <ToolBar setSpeed = { setSpeed } speed={ speed } play={play} setPlay = { setPlay }/>
-      <Canvas speed = { speed } play = { play } />
-      <h1 className='absolute bottom-0 text-[#5ac0b0] font-coolvetica text-3xl p-5'>webEDMR</h1>
+      <div className='absolute w-1/2 h-screen bg-black opacity-50'></div>
+      <Canvas speed = { speed } play = { play } className/>
+      <h1 className='absolute bottom-0 text-[#5ac0b0] font-coolvetica text-3xl p-5'>webEMDR</h1>
     </div>    
   )
 }
