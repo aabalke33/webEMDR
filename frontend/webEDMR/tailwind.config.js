@@ -18,11 +18,6 @@ export default {
         'travel-ease': 'travel 3s ease-in-out infinite'
       },
       keyframes: {
-        // travel: {
-        //   '0%': { left: '0%'},
-        //   '50%': { left: 'calc(100% - 48px)'},
-        //   '100%': { left: '0%'}
-        // }
         travel: {
           '0%': { left: 'calc(50% - 24px)'},
           '25%': { left: '0%'},
