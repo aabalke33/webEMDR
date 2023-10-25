@@ -23,7 +23,7 @@ function Canvas({ speed, play }) {
 }
 
 function App() {
-  const [speed, setSpeed] = useState(2);
+  const [speed, setSpeed] = useState(4);
   const [play, setPlay] = useState(0);
   const [buttonStyle, setButtonStyle] = useState(1);
 

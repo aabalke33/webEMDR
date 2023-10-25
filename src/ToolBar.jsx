@@ -30,12 +30,14 @@ function MediaControl({ play, setPlay, buttonStyle, setButtonStyle }) {
 function SpeedControl({ speed, setSpeed }) {
   return (
     <div
-      onClick={() => setSpeed((speed % 4) + 1)}
+      onClick={() => setSpeed(((speed - 1 + 4 - 1) % 4 ) + 1)}
       className="w-48 h-16 bg-neutral-800 hover:bg-neutral-700 transition-colors rounded-full shadow-3xl mr-4 flex justify-center flex-row"
     >
       <div className="flex flex-row items-center">
         <h1>Speed &nbsp;</h1>
-        <h1>{speed}s</h1>
+        {/* <h1>{speed} / </h1> ACTUAL SPEED IN SECONDS */}
+        {/* <h1>{((speed - 1 + 4 - 1) % 4 ) + 1} / </h1> */}
+        <h1>{4 -1 * speed + 1}</h1>
       </div>
     </div>
   );
