@@ -20,37 +20,60 @@ app.use(
     cors()
 )
 
+db.serialize(() => {
+    db.run("CREATE TABLE sessions (sessionId NUM UNIQUE, play NUM, speed NUM)");
 
-// db.serialize(() => {
-//     db.run("CREATE TABLE sessions (sessionId NUM, play NUM, speed NUM)");
+    // const sessionStmt = db.prepare("INSERT INTO sessions VALUES (?, ?, ?)");
 
-//     const sessionStmt = db.prepare("INSERT INTO sessions VALUES (?, ?, ?)");
+    app.get('*', (req, res) => {
+        // res.status(304).send('Hello World')
+        return res.status(202).send("Hello World")
+    })
 
-//     app.get('*', (req, res) => {
-//         console.log(req)
-//         // res.status(304).send('Hello World')
-//         return res.status(234).send("Hello World")
-//     })
+    app.post('/', (req, res) => {
+
+        if (req.body.type == "create") {
+            console.log("Create: ", req.body)
+            const stmt = db.prepare("INSERT INTO sessions VALUES (?, ?, ?)")
+            stmt.run(req.body.code, 0, req.body.speed )
+            stmt.finalize()
+
+            // db.each("SELECT sessionId, play, speed FROM sessions", (err, row) => {
+            //     console.log(row.sessionId, row.play, row.speed);
+            // });
+
+            return res.status(201).send("Session Created")
+        }
+        if (req.body.type == "update") {
+            console.log("Update: " , req.body)
+            const stmt = db.prepare("UPDATE sessions SET play=?, speed=? WHERE sessionId=?")
+            stmt.run(req.body.play, req.body.speed, req.body.code )
+            stmt.finalize()
+
+            // db.each("SELECT sessionId, play, speed FROM sessions", (err, row) => {
+            //     console.log(row.sessionId, row.play, row.speed);
+            // });
+
+            return res.status(201).send("Session Updated")
+        }
+    })
 
 
 
 
-
-//     sessionStmt.run(80085,0,2)
-//     sessionStmt.finalize();
-
+    // sessionStmt.run(80085,0,2)
+    // sessionStmt.finalize();
 
 
-//     db.each("SELECT sessionId, play, speed FROM sessions", (err, row) => {
-//         console.log(row.sessionId, row.play, row.speed);
-//     });
-// });
+
+
+});
 
 // db.close()
 
-app.get('/', (req, res) => {
-    return res.status(200).send("Hello World")
-})
+// app.get('*', (req, res) => {
+//     return res.status(200).send("Hello World")
+// })
 
 app.listen(PORT, () => {
     console.log(`Listening at ${PORT}`)
