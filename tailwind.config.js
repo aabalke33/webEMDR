@@ -15,7 +15,8 @@ export default {
       },
       animation: {
         'travel-linear': 'travel 3s linear infinite',
-        'travel-ease': 'travel 3s ease-in-out infinite'
+        'travel-ease': 'travel 3s ease-in-out infinite',
+        'spin-one-way': 'spin 1s linear 1s'
       },
       keyframes: {
         travel: {
@@ -23,6 +24,11 @@ export default {
           '25%': { left: '0%'},
           '75%': { left: 'calc(100% - 48px)'},
           '100%': { left: 'calc(50% - 24px)'}
+        },
+        spin: {
+          '0%': { transform: 'rotate(0deg)' },
+          '50%': { transform: 'roate(-180deg)'},
+          '100%': { transform: 'rotate(-360deg)' },
         }
       }
     },
