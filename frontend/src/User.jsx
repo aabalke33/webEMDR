@@ -22,7 +22,7 @@ function Canvas({ speed, play }) {
   );
 }
 
-function User() {
+function User({ setPage,  }) {
   const [speed, setSpeed] = useState(4);
   const [play, setPlay] = useState(0);
   const [buttonStyle, setButtonStyle] = useState(1);
@@ -34,19 +34,17 @@ function User() {
 
   return (
     <div className="w-screen h-screen flex flex-col-reverse select-none">
-      <ToolBar
-        setSpeed={setSpeed}
-        speed={speed}
-        play={play}
-        setPlay={setPlay}
-        buttonStyle={buttonStyle}
-        setButtonStyle={setButtonStyle}
-      />
       {/* <div className='absolute w-1/2 h-screen bg-black opacity-50'></div> */}
       <Canvas speed={speed} play={play} />
-      <h1 className="absolute bottom-0 text-teal-300 font-coolvetica text-3xl p-5">
-        webEMDR
-      </h1>
+      <div className="absolute bottom-0 left-0 p-10">
+        {/* <h1 className="text-teal-300 font-coolvetica text-3xl pb-3">
+          webEMDR
+        </h1> */}
+        <button onClick={() => setPage(0) } className=" text-neutral-400 bg-neutral-800 w-32 h-8 hover:bg-red-800 hover:text-white transition-colors rounded-full shadow-3xl">
+              Exit
+        </button>
+      </div>
+
     </div>
   );
 }

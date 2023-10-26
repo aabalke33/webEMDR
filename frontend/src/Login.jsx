@@ -2,8 +2,37 @@ import { useState, useEffect } from "react";
 import User from "./User";
 import { FaRegPaste } from "react-icons/fa6";
 import "./index.css";
+import axios from "axios";
 
-function Login({setPage}) {
+function Login({ setPage }) {
+  const [input, setInput] = useState("");
+
+  function enterPasscode(value) {
+    setInput(value);
+
+    if (value.length == 5) {
+      const request = {
+        type: "enter",
+        code: value,
+      };
+
+      axios
+        .post("http://localhost:8008/", request)
+        .then((res) => {
+          console.log(res.data);
+          if (res.status == 200) {
+            setPage(2);
+          }
+          if (res.status == 204) {
+            console.log("No Match");
+          }
+        })
+        .catch((err) => console.log(err));
+
+      console.log("Render: ", value);
+    }
+  }
+
   return (
     <div className="w-screen h-screen flex select-none font-roboto bg-neutral-900 items-center justify-center">
       <div>
@@ -20,12 +49,17 @@ function Login({setPage}) {
                 placeholder="*****"
                 className="!outline-none selection:bg-neutral-500 text-white bg-transparent text-xl w-32 tracking-[0.5em] pl-2"
                 maxLength={5}
+                value={input}
+                onInput={(e) => enterPasscode(e.target.value)}
               />
             </div>
           </div>
         </div>
         <div className="h-16 top-1/2 flex items-center justify-center">
-          <button className="text-neutral-500 w-36 h-8 hover:bg-neutral-800 hover:text-neutral-400 transition-colors rounded-full" onClick={() => setPage(1)}>
+          <button
+            className="text-neutral-500 w-36 h-8 hover:bg-neutral-800 hover:text-neutral-400 transition-colors rounded-full"
+            onClick={() => setPage(1)}
+          >
             Therapist Login
           </button>
         </div>

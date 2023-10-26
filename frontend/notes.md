@@ -26,3 +26,9 @@ Fun Things:
 Next Steps Personally:
 - On a larger project, state management will be more important, may require statement manager like redux.
 - Need to begin to take into account accessibility
+
+
+Update V1.1
+Node, Express, SQLite
+- Add Admin, and User version
+- Admin updates session info (play, speed) and in turn client will poll for changed (Polling)

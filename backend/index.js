@@ -23,6 +23,10 @@ app.use(
 db.serialize(() => {
     db.run("CREATE TABLE sessions (sessionId NUM UNIQUE, play NUM, speed NUM)");
 
+    const stmtz = db.prepare("INSERT INTO sessions VALUES (80085, 0, 4)")
+    stmtz.run()
+    stmtz.finalize()
+
     // const sessionStmt = db.prepare("INSERT INTO sessions VALUES (?, ?, ?)");
 
     app.get('*', (req, res) => {
@@ -31,16 +35,11 @@ db.serialize(() => {
     })
 
     app.post('/', (req, res) => {
-
         if (req.body.type == "create") {
             console.log("Create: ", req.body)
             const stmt = db.prepare("INSERT INTO sessions VALUES (?, ?, ?)")
             stmt.run(req.body.code, 0, req.body.speed )
             stmt.finalize()
-
-            // db.each("SELECT sessionId, play, speed FROM sessions", (err, row) => {
-            //     console.log(row.sessionId, row.play, row.speed);
-            // });
 
             return res.status(201).send("Session Created")
         }
@@ -56,17 +55,29 @@ db.serialize(() => {
 
             return res.status(201).send("Session Updated")
         }
+        if (req.body.type == "enter") {
+            console.log("Enter Session: ", req.body)
+            let sql = "SELECT sessionId, play, speed FROM sessions WHERE sessionId=?"
+
+            db.get(sql, [req.body.code], (err, row) => {
+
+                if (err) { return res.status(400).send("An Error Occured") }
+
+                if (row) {
+                    console.log("Session Entered")
+                    return res.status(200).send({
+                        sessionId: row.sessionId,
+                        play: row.play,
+                        speed: row.speed
+                    })
+                } else {
+                    console.log("No Matching Session")
+                    return res.status(204).send("No Matching Session")
+                } 
+            });
+
+        }
     })
-
-
-
-
-    // sessionStmt.run(80085,0,2)
-    // sessionStmt.finalize();
-
-
-
-
 });
 
 // db.close()
