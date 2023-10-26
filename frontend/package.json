@@ -1,6 +1,7 @@
 {
   "name": "webedmr",
   "private": true,
+  "proxy": "127.0.0.1:8008",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -10,9 +11,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios": "^1.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-icons": "^4.11.0"
+    "react-icons": "^4.11.0",
+    "react-router-dom": "^6.17.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
