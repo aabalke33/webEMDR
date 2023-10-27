@@ -1,6 +1,5 @@
 
-First React, Node, Express, Tailwind Project
-
+First React, Node, Express, Tailwind, Redis Project
 
 Other
 Vite, PostCSS
@@ -32,3 +31,9 @@ Update V1.1
 Node, Express, SQLite
 - Add Admin, and User version
 - Admin updates session info (play, speed) and in turn client will poll for changed (Polling)
+
+Update V1.2
+Replace SQLite with Vercel KV (Redis)
+- Why Redis?
+    - Do not need Persistent Storage
+    - Need fast query times
