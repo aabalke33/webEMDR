@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import User from "./User";
 import ToolBar from "./ToolBar";
 import { FaRegCopy } from "react-icons/fa6";
 import { BiRefresh } from "react-icons/bi";

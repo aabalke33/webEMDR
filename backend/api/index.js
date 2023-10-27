@@ -1,82 +1,78 @@
-// Add DB to Backend Workflow, begin connecting pieces
-
 import express from "express";
-import sqlite3 from "sqlite3";
 import cors from "cors";
+import { createClient } from "@vercel/kv";
 
 const app = express();
 const PORT = 8008;
-const db = new sqlite3.Database(":memory:");
 
-// Middleware
 app.use(express.json());
-
-app.use(
-  // cors({
-  //     origin: 'http://localhost:5173/',
-  //     method: ['GET', 'POST', 'PUT', 'DELETE'],
-  //     allowedHeaders: ['Content-Type']
-  // })
-  cors()
-);
+app.use(cors());
 
 app.get("/", (req, res) => {
-  res.send("Connected to Server")
-})
+  res.send(
+    "Connected to webEMDR Backend Server | \u00A9 Balkite Corporation 2023"
+  );
+});
 
+const KV_REST_API_URL = process.env.KV_REST_API_URL;
+const KV_REST_API_TOKEN = process.env.KV_REST_API_TOKEN;
+  "AZ-yASQgZjQxYmRhYjAtODlkZi00YWI1LTllOGQtNzc3YTYxZmU5ZTAyMDdkN2ViYTMxZGIyNDY2ZDhiZjE0Njk1MWQ1YzU3ZmI=";
+const redis = createClient({ url: KV_REST_API_URL, token: KV_REST_API_TOKEN });
 
-db.serialize(() => {
-  db.run("CREATE TABLE sessions (sessionId NUM UNIQUE, play NUM, speed NUM)");
+async function setSession(req) {
+  await redis.set(req.body.code, {
+    play: req.body.play ? req.body.play : 0,
+    speed: req.body.speed,
+  });
+}
 
-  const stmtz = db.prepare("INSERT INTO sessions VALUES (80085, 0, 4)");
-  stmtz.run();
-  stmtz.finalize();
+async function getSession(req) {
+  return await redis.get(req.body.code);
+}
 
-  app.post("/", (req, res) => {
-    if (req.body.type == "create") {
-      console.log("Create: ", req.body);
-      const stmt = db.prepare("INSERT INTO sessions VALUES (?, ?, ?)");
-      stmt.run(req.body.code, 0, req.body.speed);
-      stmt.finalize();
+app.post("/", (req, res) => {
+  if (req.body.type == "create") {
+    console.log("Create: ", req.body);
 
+    try {
+      setSession(req);
       return res.status(201).send("Session Created");
+    } catch (err) {
+      return res.status(500).send("Could Not Make Session");
     }
-    if (req.body.type == "update") {
-      console.log("Update: ", req.body);
-      const stmt = db.prepare(
-        "UPDATE sessions SET play=?, speed=? WHERE sessionId=?"
-      );
-      stmt.run(req.body.play, req.body.speed, req.body.code);
-      stmt.finalize();
+  }
+  if (req.body.type == "update") {
+    console.log("Update: ", req.body);
 
+    try {
+      setSession(req);
       return res.status(201).send("Session Updated");
+    } catch (err) {
+      return res.status(500).send("Session Could Not be Updated");
     }
-    if (req.body.type == "enter") {
-      console.log("Enter Session: ", req.body);
-      let sql = "SELECT sessionId, play, speed FROM sessions WHERE sessionId=?";
+  }
+  if (req.body.type == "enter") {
+    console.log("Enter Session: ", req.body);
 
-      db.get(sql, [req.body.code], (err, row) => {
-        if (err) {
-          return res.status(400).send("An Error Occured");
-        }
-
-        if (row) {
+    try {
+      getSession(req).then((entered) => {
+        if (entered) {
           console.log("Session Accessed");
           return res.status(200).send({
-            sessionId: row.sessionId,
-            play: row.play,
-            speed: row.speed,
+            sessionId: req.body.code,
+            play: entered.play,
+            speed: entered.speed,
           });
         } else {
           console.log("No Matching Session");
           return res.status(204).send("No Matching Session");
         }
       });
+    } catch (err) {
+      return res.status(500).send("An Error Occured");
     }
-  });
+  }
 });
-
-// db.close()
 
 app.listen(PORT, () => {
   console.log(`Listening at ${PORT}`);
