@@ -3,7 +3,6 @@ import User from "./User";
 import Login from "./Login";
 import Admin from "./Admin";
 import "./index.css";
-import axios from "axios";
 
 function Page() {
   const [page, setPage] = useState(0);

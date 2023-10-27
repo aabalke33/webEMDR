@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { FaRegPaste } from "react-icons/fa6";
 import "./index.css";
 import axios from "axios";
+import backendServer from "./config";
 
 function Login({ setPage, setPasscode }) {
   const [input, setInput] = useState("");
@@ -16,7 +17,7 @@ function Login({ setPage, setPasscode }) {
       };
 
       axios
-        .post("http://localhost:8008/", request)
+        .post(backendServer, request)
         .then((res) => {
           if (res.status == 200) {
             setPasscode(request.code);

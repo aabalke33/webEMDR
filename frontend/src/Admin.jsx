@@ -5,6 +5,7 @@ import { FaRegCopy } from "react-icons/fa6";
 import { BiRefresh } from "react-icons/bi";
 import "./index.css";
 import axios from "axios";
+import backendServer from "./config";
 
 function Canvas({ speed, play }) {
   const animate = play ? speed : 0;
@@ -47,7 +48,7 @@ function Admin({ setPage }) {
       };
 
       axios
-        .post("http://localhost:8008/", request)
+        .post(backendServer, request)
         // .then((res) => )
         .catch((err) => console.log(err));
 
@@ -64,7 +65,7 @@ function Admin({ setPage }) {
     };
 
     axios
-      .post("http://localhost:8008/", request)
+      .post(backendServer, request)
       // .then((res))
       .catch((err) => console.log(err));
   }, [play, speed, passcode]);
@@ -92,7 +93,7 @@ function Admin({ setPage }) {
     };
 
     axios
-      .post("http://localhost:8008/", request)
+      .post(backendServer, request)
       // .then((res))
       .catch((err) => console.log(err));
   }

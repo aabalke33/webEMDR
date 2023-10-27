@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { BsPlayFill, BsPauseFill } from "react-icons/bs";
 import "./index.css";
-import axios from "axios";
 
 function MediaControl({ play, setPlay, buttonStyle, setButtonStyle }) {
   return (

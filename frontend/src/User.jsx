@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import "./index.css";
 import { usePageVisibility } from "./usePageVisibility";
 import axios from "axios";
+import backendServer from "./config";
 
 function Canvas({ speed, play }) {
   const animate = play ? speed : 0;
@@ -96,7 +97,7 @@ function User({ setPage, passcode }) {
       };
 
       axios
-        .post("http://localhost:8008/", request)
+        .post(backendServer, request)
         .then((res) => {
           setPlay(res.data.play);
           setSpeed(res.data.speed);
