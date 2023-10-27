@@ -8,22 +8,34 @@ const PORT = 8008;
 app.use(express.json());
 app.use(cors());
 
-app.get("/", (req, res) => {
-  res.send(
-    "Connected to webEMDR Backend Server | \u00A9 Balkite Corporation 2023"
-  );
-});
-
 const redis = createClient({
   url: process.env.KV_REST_API_URL,
   token: process.env.KV_REST_API_TOKEN
 });
+
+
+app.get("/", (req, res) => {
+  
+  pingRedis();
+
+  res.send(
+    "Connected to webEMDR Backend Server | \u00A9 Balkite Corporation 2023"
+  );
+
+});
+
+async function pingRedis() {
+  const val = await redis.ping();
+  console.log(val)
+}
+
 
 async function setSession(req) {
   await redis.set(req.body.code, {
     play: req.body.play ? req.body.play : 0,
     speed: req.body.speed,
   });
+
 }
 
 async function getSession(req) {
