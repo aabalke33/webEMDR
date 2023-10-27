@@ -130,7 +130,7 @@ function Admin({ setPage }) {
               onClick={createPasscode}
             />
           </div>
-          <p className="text-white p-1">Patient is not connected.</p>
+          {/* <p className="text-white p-1">Patient is not connected.</p> */}
           <div className="opacity-25 py-5">
             <Canvas speed={speed} play={play} />
           </div>

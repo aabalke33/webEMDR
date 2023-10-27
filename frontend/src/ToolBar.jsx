@@ -4,12 +4,6 @@ import "./index.css";
 import axios from "axios";
 
 function MediaControl({ play, setPlay, buttonStyle, setButtonStyle }) {
-
-
-
-
-
-  
   return (
     <div className="w-16 h-16 bg-neutral-800 hover:bg-neutral-700 transition-colors rounded-full shadow-3xl mr-4">
       <div

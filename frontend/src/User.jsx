@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
-import ToolBar from "./ToolBar";
+import { useState, useEffect, useRef } from "react";
 import "./index.css";
+import { usePageVisibility } from "./usePageVisibility";
+import axios from "axios";
 
 function Canvas({ speed, play }) {
   const animate = play ? speed : 0;
@@ -22,10 +23,111 @@ function Canvas({ speed, play }) {
   );
 }
 
-function User({ setPage,  }) {
+function Count({ speed, play }) {
+  const [time, setTime] = useState(0);
+  const [startTime, setStartTime] = useState(0);
+
+  function now() {
+    return new Date().getTime();
+  }
+
+  useEffect(() => {
+    if (play) {
+      setStartTime(now());
+    } else {
+      setStartTime(0);
+    }
+  }, [play]);
+
+  useEffect(() => {
+    const audioLeft = new Audio("./left.mp3");
+    const audioRight = new Audio("./right.mp3");
+
+    function playSound(startTime, speed) {
+      const variance = 5 + speed * 1;
+      const elapse = (now() - startTime) % (speed * 1000);
+      const leftFloor = speed * 250 - variance;
+      const leftCeil = speed * 250 + variance;
+      const rightFloor = speed * 750 - variance;
+      const rightCeil = speed * 750 + variance;
+      const locationLeft = leftFloor < elapse && elapse < leftCeil;
+      const locationRight = rightFloor < elapse && elapse < rightCeil;
+
+      if (locationLeft) {
+        audioLeft.play();
+      }
+      if (locationRight) {
+        audioRight.play();
+      }
+    }
+
+    let interval;
+
+    if (play) {
+      interval = setInterval(() => {
+        playSound(startTime, speed);
+        setTime(Math.floor((now() - startTime) / (speed * 1000)));
+      }, 10);
+    } else {
+      setTime(0);
+      interval = 0;
+    }
+    return () => clearInterval(interval);
+  }, [time, play, speed, startTime]);
+
+
+
+  return <></>;
+}
+
+function User({ setPage, passcode }) {
+  const isVisible = usePageVisibility();
+
   const [speed, setSpeed] = useState(4);
   const [play, setPlay] = useState(0);
   const [buttonStyle, setButtonStyle] = useState(1);
+  const [polling, setPolling] = useState(true);
+
+  const timerIdRef = useRef(null);
+
+  useEffect(() => {
+    function pollingCallback() {
+      const request = {
+        type: "enter",
+        code: passcode,
+      };
+
+      axios
+        .post("http://localhost:8008/", request)
+        .then((res) => {
+          setPlay(res.data.play)
+          setSpeed(res.data.speed)
+        })
+        .catch((err) => console.log(err));
+
+      console.log("Polling...");
+
+      startPolling();
+    }
+
+    function startPolling() {
+      timerIdRef.current = setTimeout(pollingCallback, 500);
+    }
+
+    function stopPolling() {
+      clearTimeout(timerIdRef.current);
+    }
+
+    if (isVisible && polling) {
+      startPolling();
+    } else {
+      stopPolling();
+    }
+
+    return () => {
+      stopPolling();
+    };
+  }, [isVisible, polling]);
 
   useEffect(() => {
     setPlay(0);
@@ -36,15 +138,15 @@ function User({ setPage,  }) {
     <div className="w-screen h-screen flex flex-col-reverse select-none">
       {/* <div className='absolute w-1/2 h-screen bg-black opacity-50'></div> */}
       <Canvas speed={speed} play={play} />
+      <Count speed={speed} play={play} />
       <div className="absolute bottom-0 left-0 p-10">
-        {/* <h1 className="text-teal-300 font-coolvetica text-3xl pb-3">
-          webEMDR
-        </h1> */}
-        <button onClick={() => setPage(0) } className=" text-neutral-400 bg-neutral-800 w-32 h-8 hover:bg-red-800 hover:text-white transition-colors rounded-full shadow-3xl">
-              Exit
+        <button
+          onClick={() => setPage(0)}
+          className="font-roboto text-neutral-400 bg-neutral-800 w-32 h-8 hover:bg-red-800 hover:text-white transition-colors rounded-full shadow-3xl"
+        >
+          Exit
         </button>
       </div>
-
     </div>
   );
 }

@@ -75,7 +75,6 @@ db.serialize(() => {
                     return res.status(204).send("No Matching Session")
                 } 
             });
-
         }
     })
 });

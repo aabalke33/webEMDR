@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import User from "./User";
 import { FaRegPaste } from "react-icons/fa6";
 import "./index.css";
 import axios from "axios";
 
-function Login({ setPage }) {
+function Login({ setPage, setPasscode }) {
   const [input, setInput] = useState("");
 
   function enterPasscode(value) {
@@ -21,6 +20,7 @@ function Login({ setPage }) {
         .then((res) => {
           console.log(res.data);
           if (res.status == 200) {
+            setPasscode(request.code)
             setPage(2);
           }
           if (res.status == 204) {
