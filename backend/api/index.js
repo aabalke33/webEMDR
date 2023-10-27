@@ -20,6 +20,11 @@ app.use(
   cors()
 );
 
+app.get("/", (req, res) => {
+  res.send("Connected to Server")
+})
+
+
 db.serialize(() => {
   db.run("CREATE TABLE sessions (sessionId NUM UNIQUE, play NUM, speed NUM)");
 
