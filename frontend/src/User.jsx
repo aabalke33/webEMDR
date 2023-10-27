@@ -68,7 +68,7 @@ function Count({ speed, play }) {
       interval = setInterval(() => {
         playSound(startTime, speed);
         setTime(Math.floor((now() - startTime) / (speed * 1000)));
-      }, 1000);
+      }, 5000);
     } else {
       setTime(0);
       interval = 0;
