@@ -14,10 +14,10 @@ app.get("/", (req, res) => {
   );
 });
 
-const KV_REST_API_URL = process.env.KV_REST_API_URL;
-const KV_REST_API_TOKEN = process.env.KV_REST_API_TOKEN;
-  "AZ-yASQgZjQxYmRhYjAtODlkZi00YWI1LTllOGQtNzc3YTYxZmU5ZTAyMDdkN2ViYTMxZGIyNDY2ZDhiZjE0Njk1MWQ1YzU3ZmI=";
-const redis = createClient({ url: KV_REST_API_URL, token: KV_REST_API_TOKEN });
+const redis = createClient({
+  url: process.env.KV_REST_API_URL,
+  token: process.env.KV_REST_API_TOKEN
+});
 
 async function setSession(req) {
   await redis.set(req.body.code, {
