@@ -75,8 +75,6 @@ function Count({ speed, play }) {
     return () => clearInterval(interval);
   }, [time, play, speed, startTime]);
 
-
-
   return <></>;
 }
 
@@ -100,12 +98,10 @@ function User({ setPage, passcode }) {
       axios
         .post("http://localhost:8008/", request)
         .then((res) => {
-          setPlay(res.data.play)
-          setSpeed(res.data.speed)
+          setPlay(res.data.play);
+          setSpeed(res.data.speed);
         })
         .catch((err) => console.log(err));
-
-      console.log("Polling...");
 
       startPolling();
     }

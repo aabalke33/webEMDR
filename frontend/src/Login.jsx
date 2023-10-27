@@ -18,18 +18,15 @@ function Login({ setPage, setPasscode }) {
       axios
         .post("http://localhost:8008/", request)
         .then((res) => {
-          console.log(res.data);
           if (res.status == 200) {
-            setPasscode(request.code)
+            setPasscode(request.code);
             setPage(2);
           }
-          if (res.status == 204) {
-            console.log("No Match");
-          }
+          // if (res.status == 204) {
+          //   console.log("No Match");
+          // }
         })
         .catch((err) => console.log(err));
-
-      console.log("Render: ", value);
     }
   }
 

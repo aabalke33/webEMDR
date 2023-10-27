@@ -4,7 +4,7 @@ import ToolBar from "./ToolBar";
 import { FaRegCopy } from "react-icons/fa6";
 import { BiRefresh } from "react-icons/bi";
 import "./index.css";
-import axios from 'axios';
+import axios from "axios";
 
 function Canvas({ speed, play }) {
   const animate = play ? speed : 0;
@@ -35,7 +35,7 @@ function Admin({ setPage }) {
   const [speed, setSpeed] = useState(4);
   const [play, setPlay] = useState(0);
   const [buttonStyle, setButtonStyle] = useState(1);
-  const initialLoad = useRef(true)
+  const initialLoad = useRef(true);
 
   useEffect(() => {
     if (initialLoad.current) {
@@ -43,30 +43,31 @@ function Admin({ setPage }) {
         type: "create",
         code: passcode,
         play: 0,
-        speed: speed
-      }
-  
-      axios.post('http://localhost:8008/', request)
-        .then(res => console.log(res.data))
-        .catch(err => console.log(err));
-  
-      initialLoad.current = false
+        speed: speed,
+      };
+
+      axios
+        .post("http://localhost:8008/", request)
+        // .then((res) => )
+        .catch((err) => console.log(err));
+
+      initialLoad.current = false;
     }
-  }, [initialLoad])
+  }, [initialLoad]);
 
   useEffect(() => {
     const request = {
       type: "update",
       code: passcode,
       play: play,
-      speed: speed
-    }
+      speed: speed,
+    };
 
-    axios.post('http://localhost:8008/', request)
-      .then(res => console.log(res.data))
-      .catch(err => console.log(err));
-
-  }, [play, speed, passcode])
+    axios
+      .post("http://localhost:8008/", request)
+      // .then((res))
+      .catch((err) => console.log(err));
+  }, [play, speed, passcode]);
 
   useEffect(() => {
     setPlay(0);
@@ -80,21 +81,20 @@ function Admin({ setPage }) {
     setPasscode(code);
 
     if (play) {
-      setPlay(0)
+      setPlay(0);
     }
 
     const request = {
       type: "create",
       code: code,
       play: 0,
-      speed: speed
-    }
+      speed: speed,
+    };
 
-    axios.post('http://localhost:8008/', request)
-      .then(res => console.log(res.data))
-      .catch(err => console.log(err));
-
-
+    axios
+      .post("http://localhost:8008/", request)
+      // .then((res))
+      .catch((err) => console.log(err));
   }
 
   function copyPasscode() {
@@ -142,7 +142,10 @@ function Admin({ setPage }) {
             buttonStyle={buttonStyle}
             setButtonStyle={setButtonStyle}
           />
-          <button onClick={() => setPage(0) } className="text-neutral-400 bg-neutral-800 w-16 h-8 hover:bg-red-800 hover:text-white transition-colors rounded-full shadow-3xl">
+          <button
+            onClick={() => setPage(0)}
+            className="text-neutral-400 bg-neutral-800 w-16 h-8 hover:bg-red-800 hover:text-white transition-colors rounded-full shadow-3xl"
+          >
             Exit
           </button>
         </div>
