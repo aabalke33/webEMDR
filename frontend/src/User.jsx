@@ -68,7 +68,7 @@ function Count({ speed, play }) {
       interval = setInterval(() => {
         playSound(startTime, speed);
         setTime(Math.floor((now() - startTime) / (speed * 1000)));
-      }, 5000);
+      }, 10);
     } else {
       setTime(0);
       interval = 0;
@@ -86,6 +86,7 @@ function User({ setPage, passcode }) {
   const [play, setPlay] = useState(0);
   const [buttonStyle, setButtonStyle] = useState(1);
   const [polling, setPolling] = useState(true);
+  const [pollingCount, setPollingCount] = useState(0)
 
   const timerIdRef = useRef(null);
 
@@ -104,18 +105,20 @@ function User({ setPage, passcode }) {
         })
         .catch((err) => console.log(err));
 
+      setPollingCount(pollingCount + 1)
+
       startPolling();
     }
 
     function startPolling() {
-      timerIdRef.current = setTimeout(pollingCallback, 500);
+      timerIdRef.current = setTimeout(pollingCallback, 1000);
     }
 
     function stopPolling() {
       clearTimeout(timerIdRef.current);
     }
 
-    if (isVisible && polling) {
+    if (isVisible && polling && (pollingCount < 3600)) {
       startPolling();
     } else {
       stopPolling();
