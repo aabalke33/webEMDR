@@ -5,6 +5,9 @@ The web app is available [here](https://web-emdr.vercel.app/).
 
 ![demo](https://github.com/aabalke33/webEMDR/assets/22086435/d1e68d2d-f435-48cc-8534-e5470861d5f8)
 
+## Youtube Video Breakdown
+[<img src="https://github.com/aabalke33/webEMDR/assets/22086435/8d2ef90f-a32c-4cfa-8c10-2c9f4402b264" width="50%">](https://www.youtube.com/watch?v=b-K1dWyCgTg)
+
 ## Client Purpose
 webEMDR is a web application to enable Eye Movement Desensitization and Reprocessing (EMDR) Treatment remotely between a therapist and their client. The mental health provider required the ability to remotely control a clients webpage, adjust the speed, play/pause options, and count the cycles. 
 
